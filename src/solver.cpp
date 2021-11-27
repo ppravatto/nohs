@@ -53,7 +53,7 @@ namespace nohs{
     void Solver::solve(double threshold_){
 
         #ifdef _OPENMP
-            #pragma omp parallel for collapse(2)
+            #pragma omp parallel for collapse(2) schedule(dynamic, 4)
         #endif
         for(int row=0; row<N; row++){
             for(int col=0; col<N; col++){
@@ -65,7 +65,7 @@ namespace nohs{
         }
 
         #ifdef _OPENMP
-            #pragma omp parallel for
+            #pragma omp parallel for schedule(dynamic, 4)
         #endif
         for(int row=0; row<N; row++){
             for(int col=0; col<row; col++){
@@ -94,7 +94,7 @@ namespace nohs{
         arma::mat Q_red = arma::mat(N, N_red, arma::fill::zeros);
 
         #ifdef _OPENMP
-            #pragma omp parallel for
+            #pragma omp parallel for schedule(dynamic, 4)
         #endif
         for(int col=0; col<N_red; col++){
             double factor = 1./std::sqrt(S_eval(stop_index + col));
@@ -107,7 +107,7 @@ namespace nohs{
         H_red = Q_red.t() * H * Q_red;
 
         #ifdef _OPENMP
-            #pragma omp parallel for
+            #pragma omp parallel for schedule(dynamic, 4)
         #endif
         for(int row=0; row<N_red; row++){
             for(int col=0; col<=row; col++){
