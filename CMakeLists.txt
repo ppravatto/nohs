@@ -23,8 +23,12 @@ if(OpenMP_CXX_FOUND)
   set(LIBS ${LIBS} OpenMP::OpenMP_CXX)
 endif()
 
-add_library(nohs SHARED src/hermite.cpp src/solver.cpp)
-set_target_properties(nohs PROPERTIES PUBLIC_HEADER include/nohs.h PUBLIC_HEADER include/nohs_exceptions.h)
+add_library(nohs SHARED src/hermite.cpp src/solver.cpp src/optimizer.cpp)
+set_target_properties(nohs PROPERTIES
+  PUBLIC_HEADER include/nohs.h
+  PUBLIC_HEADER include/nohs_exceptions.h
+  PUBLIC_HEADER include/nohs_optimizer.h
+)
 set_target_properties(nohs PROPERTIES VERSION ${PROJECT_VERSION})
 target_include_directories(nohs PRIVATE include)
 target_include_directories(nohs PRIVATE src)
