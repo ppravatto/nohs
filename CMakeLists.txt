@@ -25,9 +25,7 @@ endif()
 
 add_library(nohs SHARED src/hermite.cpp src/solver.cpp src/optimizer.cpp)
 set_target_properties(nohs PROPERTIES
-  PUBLIC_HEADER include/nohs.h
-  PUBLIC_HEADER include/nohs_exceptions.h
-  PUBLIC_HEADER include/nohs_optimizer.h
+  PUBLIC_HEADER include/nohs.h include/nohs_exceptions.h include/nohs_optimizer.h
 )
 set_target_properties(nohs PROPERTIES VERSION ${PROJECT_VERSION})
 target_include_directories(nohs PRIVATE include)
@@ -35,12 +33,16 @@ target_include_directories(nohs PRIVATE src)
 target_link_libraries(nohs ${LIBS})
 
 
-
 install(
     TARGETS nohs
     LIBRARY DESTINATION "${CMAKE_INSTALL_PREFIX}/lib"
     PUBLIC_HEADER DESTINATION "${CMAKE_INSTALL_PREFIX}/include"
     )
+
+install(
+  FILES include/nohs.h include/nohs_exceptions.h include/nohs_optimizer.h
+  DESTINATION "${CMAKE_INSTALL_PREFIX}/include"
+  )
 
 option(COMPILE_EXAMPLES "Set whether the examples are compiled" OFF)
 
