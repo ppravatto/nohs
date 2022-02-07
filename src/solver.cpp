@@ -133,13 +133,13 @@ namespace nohs{
 
     double Solver::energy(int index_){
         if(solved == false) throw exceptions::SolverError();
-        if(index_ >= N_red) throw exceptions::BoundError();
+        if(index_ < 0 || index_ >= N_red) throw exceptions::BoundError();
         return E(index_);
     }
 
     double Solver::psi(int index_, double x_){
         if(solved == false) throw exceptions::SolverError();
-        if(index_ >= N_red) throw exceptions::BoundError();
+        if(index_ < 0 || index_ >= N_red) throw exceptions::BoundError();
         double value = 0.;
         for(int i=0; i<N; i++){
             value += C(i, index_)*BasisSet[i].f(x_);
