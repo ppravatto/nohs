@@ -20,38 +20,36 @@ static int find_index(std::vector<T> vector, T object){
 namespace nohs{
 
     struct OptCarrier{
-        std::vector<int> max_order, assignment;
-        std::vector<double> center;
-        double (*V)(double, void*);
-        void* parameters;
-        OptCarrier(){};
-        OptCarrier(std::vector<int> max_order_, std::vector<double> center_, std::vector<int> assignment_,  double (*V_)(double, void*), void* parameters_) : max_order(max_order_), assignment(assignment_), center(center_), V(V_), parameters(parameters_) {};
+        Optimizer* opt_ptr;
+        std::vector<int> assignment;
+        OptCarrier(Optimizer* opt_ptr_, std::vector<int> assignment_) : opt_ptr(opt_ptr_), assignment(assignment_) {}
     };
 
     double minimization_target(const gsl_vector* v, void* pvoid){
         OptCarrier p = *(OptCarrier*) pvoid;
+        Optimizer* origin = p.opt_ptr;
 
-        int N = int(p.max_order.size());
+        int N = int(origin->max_order.size());
 
         std::vector<Hermite> BasisSet;
         for(int i=0; i<N; i++){
             double alpha = gsl_vector_get(v, p.assignment[i]);
-            for(int order=0; order<=p.max_order[i]; order++){
-                Hermite function(order, alpha, p.center[i]);
+            for(int order=0; order<=origin->max_order[i]; order++){
+                Hermite function(order, alpha, origin->center[i]);
                 BasisSet.push_back(function);
             }
         }
 
-        Solver System(BasisSet, p.V, p.parameters);
+        Solver System(BasisSet, origin->V, origin->parameters);
+        System.set_integration_parameters(origin->npt, origin->abs, origin->rel);
         System.solve(1e-8);
 
         return System.energy(0);
     }
 
 
-
     
-    Optimizer::Optimizer(double (*V_)(double, void*), void* parameters_) : optimized(false), N_labels(0), V(V_), parameters(parameters_) {}
+    Optimizer::Optimizer(double (*V_)(double, void*), void* parameters_) : optimized(false), N_labels(0), npt(10000), abs(1e-10), rel(1e-10), V(V_), parameters(parameters_) {}
 
     void Optimizer::add(double center_, int max_order_, double guess_, int label_){
         int idx = find_index<int>(label, label_);
@@ -63,7 +61,11 @@ namespace nohs{
         label.push_back(label_);
     }
 
-    void Optimizer::optimize(bool verbose_){
+    void Optimizer::set_integration_parameters(unsigned int npt_, double abs_, double rel_){
+        npt = npt_; abs = abs_, rel = rel_;
+    }
+
+    void Optimizer::optimize(size_t max_iter_, double stop_size_, bool verbose_){
 
         const gsl_multimin_fminimizer_type* T = gsl_multimin_fminimizer_nmsimplex2;
         gsl_multimin_fminimizer* s = gsl_multimin_fminimizer_alloc (T, N_labels);
@@ -89,7 +91,7 @@ namespace nohs{
         gsl_multimin_function target;
         target.n = N_labels;
         target.f = &minimization_target;
-        OptCarrier data(max_order, center, assignment, V, parameters);
+        OptCarrier data(this, assignment);
         target.params = &data;
         
         gsl_multimin_fminimizer_set(s, &target, x, step);
@@ -103,7 +105,7 @@ namespace nohs{
             status = gsl_multimin_fminimizer_iterate(s);
             if (status) break;
             size = gsl_multimin_fminimizer_size(s);
-            status = gsl_multimin_test_size (size, 1e-2);
+            status = gsl_multimin_test_size (size, stop_size_);
             if(status == GSL_SUCCESS && verbose_==true){
                 std::cout << "Optimization converged:" << std::endl;
                 std::cout << "-> Iterations: " << iter << std::endl;
@@ -112,7 +114,7 @@ namespace nohs{
                 std::cout << "-> Function value: " << s->fval << std::endl;
                 std::cout << "-> Simplex size: " << size << std::endl;
             }
-        }while (status == GSL_CONTINUE && iter < 100);
+        }while (status == GSL_CONTINUE && iter < max_iter_);
 
         optimized_alpha.clear();
         for(std::vector<int>::iterator ptr = assignment.begin(); ptr < assignment.end(); ptr++){

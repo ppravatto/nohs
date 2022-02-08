@@ -97,13 +97,17 @@ void add(double center_, int max_order_, double guess_, int label_);
 ```
 in which `center_` encodes the position of the function center, the `max_orede_` variable set the maximum order of the Hermite functions associated with the function group while `guess_` encodes a starting value for the group amplitude parameter `alpha`. The `label_` parameter can be used to link groups of functions that must share the same amplitude parameter (e.g. functions group related by symmetry). If the `label_` associated with each group is different from the one associated with the others, no link between parameters will be considered.
 
+The optimization procedure generates small instance of the `Solver` class during its execution. The integration parameters considered during the optimization procedure can be set by calling the function:
+```
+void set_integration_parameters(unsigned int npt_, double abs_, double rel_)
+```
+whose definition and default parameters match the one considered in the `Solver` class definition.
+
 Once the Hermite function groups have been defined, the optimization can be performed by invoking the:
 ```
-void optimize(bool verbose_)
+void optimize(size_t max_iter_, double stop_size_, bool verbose_)
 ```
-if the `verbose_` flag is set to `true` some information about the progress of the optimization process will be printed in the `iostream`.
-
-The optimization procedure is performed by the `gsl_multimin_fminimizer_nmsimplex2` GNU_GSL routine. The maximum number of iterations is set to `100` and the convergence criterion (`gsl_multimin_test_size`) is set to `1e-2`. In the current version, these parameters are hard-coded in the class definition and are not exposed to the user.
+The optimization procedure is performed by the `gsl_multimin_fminimizer_nmsimplex2` GNU_GSL routine. The maximum number of iterations is set by the `max_iter_` variable while the convergence criterion (`gsl_multimin_test_size`) is set by the `stop_size_` variable. If the `verbose_` flag is set to `true` some information about the progress of the optimization process will be printed in the `iostream`.
 
 Once the optimization procedure is completed the function:
 ```
