@@ -10,24 +10,42 @@ The "Non-Orthogonal Hermite Solver" library (NOHS) is a simple C++ library that 
 
 NOTE: all the version requirements listed with "(possibly ver. [...])" are not strictly mandatory. The version indicated represents the one used for development and testing. Older library versions can possibly work as well.
 
+## How to install
+After downloading this repository you can enter the main folder and use the following commands to compile and install the library:
+```
+mkdir build
+cd build
+cmake ..
+make
+sudo make install
+```
+This will compile and install the library in the `/usr/local` system folder (requires `sudo` privileges). You can change the installation location setting the `CMAKE_INSTALL_PREFIX` variable using the command:
+```
+cmake -DCMAKE_INSTALL_PREFIX=<your path> ..
+```
+If you want to compile the provided examples you can set the `COMPILE_EXAMPLES` variable to `ON` and set the installation path setting the correspondent `EXAMPLES_INSTALL_PATH` variable.
+
+If you want, you can use also the `ccmake` interactive mode to set the required variables using the GUI.
+
+
 ## The `Hermite` function calss
 The `Hermite` class, contained in the `nohs` namespace, implements the definition of the Hermite function:
 
 <div align="center">
-    <img src="https://latex.codecogs.com/svg.image?\psi_n(x):=\sqrt{\frac{\alpha}{2^nn!\sqrt{\pi}}}&space;H_n(\alpha&space;x)e^{-\frac{1}{2}\alpha^2x^2}" title="\psi_n(x):=\sqrt{\frac{\alpha}{2^nn!\sqrt{\pi}}} H_n(\alpha x)e^{-\frac{1}{2}\alpha^2x^2}" />
+    <img src="https://render.githubusercontent.com/render/math?math=\psi_n(x):=\sqrt{\frac{\alpha}{2^nn!\sqrt{\pi}}}H_n(\alpha x)e^{-\frac{1}{2}\alpha^2x^2}">
 </div>
 
- where `H_n(q)` represents the [physicist's Hermite polynomial](https://en.wikipedia.org/wiki/Hermite_polynomials#Definition) of order `n`.
+where `H_n(q)` represents the [physicist's Hermite polynomial](https://en.wikipedia.org/wiki/Hermite_polynomials#Definition) of order `n`.
 
-  An instance of the `Hermite` class can be created using both the default unparameterized constructor or the parameterized constructor:
+An instance of the `Hermite` class can be created using both the default unparameterized constructor or the parameterized constructor:
 
- ```
-    Hermite(int order_, double alpha_, double center_)
- ```
- 
- the latter sets both the order `n` and the amplitude coefficient `alpha`. The `center` parameter can be used to specify an arbitrary offset of the function center from the origin.
- 
- The `Hermite` class provides to the user the following public member functions:
+```
+Hermite(int order_, double alpha_, double center_)
+```
+
+the latter sets both the order `n` and the amplitude coefficient `alpha`. The `center` parameter can be used to specify an arbitrary offset of the function center from the origin.
+
+The `Hermite` class provides to the user the following public member functions:
 
 | Function |      Description      |
 |:----------:|:----------:|
