@@ -67,7 +67,6 @@ in which the `pvoid` variable represents a pointer to some form of parameter req
 An instance of the `Solver` class can be created specifying the pointer to the potential function considered, a pointer to the parameters required by the potential function definition and an indication of the basis set to be used in the computation. The basis set can be specified directly on construction, (as a `std::vector<nohs::Hermite>` vector), using the constructor:
 ```
 Solver(std::vector<nohs::Hermite> BasisSet_, double (*V_)(double, void*), void* parameters_)        
-
 ```
 or can be simply pre-allocated using the constructor:
 ```
@@ -125,7 +124,7 @@ Once the Hermite function groups have been defined, the optimization can be perf
 ```
 void optimize(size_t max_iter_, double stop_size_, bool verbose_)
 ```
-The optimization procedure is performed by the `gsl_multimin_fminimizer_nmsimplex2` GNU_GSL routine. The maximum number of iterations is set by the `max_iter_` variable while the convergence criterion (`gsl_multimin_test_size`) is set by the `stop_size_` variable. If the `verbose_` flag is set to `true` some information about the progress of the optimization process will be printed in the `iostream`.
+The optimization procedure is performed by the `gsl_multimin_fminimizer_nmsimplex2` [GNU_GSL routine](https://www.gnu.org/software/gsl/doc/html/multimin.html#algorithms-without-derivatives). The maximum number of iterations is set by the `max_iter_` variable while the convergence criterion (`gsl_multimin_test_size`) is set by the `stop_size_` variable. If the `verbose_` flag is set to `true` some information about the progress of the optimization process will be printed in the `iostream`.
 
 Once the optimization procedure is completed the function:
 ```
