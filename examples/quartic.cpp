@@ -33,7 +33,7 @@ int main(){
     MyOptimizer.add(0., 10, alpha_guess, 0);
     MyOptimizer.add(1., 5, alpha_guess, 1);
     MyOptimizer.add(-1., 5, alpha_guess, 1);
-    MyOptimizer.optimize(true);
+    MyOptimizer.optimize(200, 1e-5, true);
     std::cout << std::endl;
 
 
