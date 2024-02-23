@@ -31,9 +31,9 @@ If you want, you can use also the `ccmake` interactive mode to set the required 
 ## The `Hermite` function calss
 The `Hermite` class, contained in the `nohs` namespace, implements the definition of the Hermite function:
 
-<div align="center">
-    <img src="https://render.githubusercontent.com/render/math?math=\psi_n(x):=\sqrt{\frac{\alpha}{2^nn!\sqrt{\pi}}}H_n(\alpha x)e^{-\frac{1}{2}\alpha^2x^2}">
-</div>
+$$
+\psi_n(x):=\sqrt{\frac{\alpha}{2^nn!\sqrt{\pi}}}H_n(\alpha x)e^{-\frac{1}{2}\alpha^2x^2}
+$$
 
 where `H_n(q)` represents the [physicist's Hermite polynomial](https://en.wikipedia.org/wiki/Hermite_polynomials#Definition) of order `n`.
 
